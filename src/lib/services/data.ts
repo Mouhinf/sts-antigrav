@@ -70,7 +70,10 @@ export const getPropertyById = unstable_cache(
 
 export const getFeaturedProperties = unstable_cache(
   async (limit = 6): Promise<(Property & { id: string })[]> => {
-    const snapshot = await getAdminDb()
+    const db = await getAdminDb();
+    if (!db) return [];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const snapshot = await db!
       .collection("properties")
       .where("featured", "==", true)
       .where("status", "==", "available")
@@ -309,7 +312,10 @@ export async function getDashboardStats(): Promise<{
 }
 
 export async function getRecentMessages(limit = 5): Promise<(Message & { id: string })[]> {
-  const snapshot = await getAdminDb()
+  const db = await getAdminDb();
+  if (!db) return [];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const snapshot = await db!
     .collection("messages")
     .orderBy("createdAt", "desc")
     .limit(limit)
@@ -322,7 +328,10 @@ export async function getRecentMessages(limit = 5): Promise<(Message & { id: str
 }
 
 export async function getRecentQuotes(limit = 5): Promise<(Quote & { id: string })[]> {
-  const snapshot = await getAdminDb()
+  const db = await getAdminDb();
+  if (!db) return [];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const snapshot = await db!
     .collection("quotes")
     .orderBy("createdAt", "desc")
     .limit(limit)
@@ -335,7 +344,10 @@ export async function getRecentQuotes(limit = 5): Promise<(Quote & { id: string 
 }
 
 export async function getRecentBookings(limit = 5): Promise<(Booking & { id: string })[]> {
-  const snapshot = await getAdminDb()
+  const db = await getAdminDb();
+  if (!db) return [];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const snapshot = await db!
     .collection("bookings")
     .orderBy("createdAt", "desc")
     .limit(limit)
