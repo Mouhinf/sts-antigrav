@@ -23,13 +23,14 @@ interface PaginatedResult<T> {
 
 export const getProperties = unstable_cache(
   async (limit = 10, lastDoc?: string): Promise<PaginatedResult<Property & { id: string }>> => {
-    let query = await getAdminDb()
+    const db = await getAdminDb();
+    let query = db
       .collection("properties")
       .orderBy("createdAt", "desc")
       .limit(limit);
 
     if (lastDoc) {
-      const lastDocSnapshot = await getAdminDb().collection("properties").doc(lastDoc).get();
+      const lastDocSnapshot = await db.collection("properties").doc(lastDoc).get();
       if (lastDocSnapshot.exists) {
         query = query.startAfter(lastDocSnapshot);
       }
