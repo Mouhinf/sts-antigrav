@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sts-green: #1A8C3E;
+  --sts-blue: #1A5FA8;
+  --sts-black: #0A0A0A;
+  --sts-white: #F5F5F0;
+}
+
+@layer base {
+  body {
+    @apply font-sans;
+  }
+}
+
+@layer utilities {
+  .animate-slow-zoom {
+    animation: slow-zoom 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes slow-zoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+  }
+}
+
+/* Custom transitions */
+.transition-all {
+  transition-duration: 300ms;
+}
+
+/* Accessibility Focus Styles */
+:focus-visible {
+  @apply outline-2 outline-offset-4 outline-sts-green;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full hover:bg-sts-green transition-colors;
+}

@@ -1,0 +1,82 @@
+[debug] [2026-04-24T22:43:42.460Z] ----------------------------------------------------------------------
+[debug] [2026-04-24T22:43:42.467Z] Command:       /home/mouhammad/.nvm/versions/node/v18.20.8/bin/node /home/mouhammad/.nvm/versions/node/v18.20.8/bin/firebase deploy --only hosting --project assiriktours-e576f
+[debug] [2026-04-24T22:43:42.469Z] CLI Version:   13.35.1
+[debug] [2026-04-24T22:43:42.471Z] Platform:      linux
+[debug] [2026-04-24T22:43:42.471Z] Node Version:  v18.20.8
+[debug] [2026-04-24T22:43:42.472Z] Time:          Fri Apr 24 2026 22:43:42 GMT+0000 (heure moyenne de Greenwich)
+[debug] [2026-04-24T22:43:42.473Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-04-24T22:43:43.338Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-04-24T22:43:43.339Z] > authorizing via signed-in user (manhaj499@gmail.com)
+[debug] [2026-04-24T22:43:43.339Z] [iam] checking project assiriktours-e576f for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-04-24T22:43:43.344Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:43.345Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:43.347Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/assiriktours-e576f:testIamPermissions [none]
+[debug] [2026-04-24T22:43:43.348Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/assiriktours-e576f:testIamPermissions x-goog-quota-user=projects/assiriktours-e576f
+[debug] [2026-04-24T22:43:43.348Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/assiriktours-e576f:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-04-24T22:43:44.335Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/assiriktours-e576f:testIamPermissions 200
+[debug] [2026-04-24T22:43:44.335Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/assiriktours-e576f:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-04-24T22:43:44.337Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:44.337Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:44.338Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/assiriktours-e576f [none]
+[debug] [2026-04-24T22:43:44.866Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/assiriktours-e576f 200
+[debug] [2026-04-24T22:43:44.866Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/assiriktours-e576f {"projectId":"assiriktours-e576f","projectNumber":"458159028958","displayName":"AssirikTours","name":"projects/assiriktours-e576f","resources":{"hostingSite":"assiriktours-e576f"},"state":"ACTIVE","etag":"1_2b1db23d-15c2-4540-88f6-a6677400c661"}
+[debug] [2026-04-24T22:43:52.973Z] defaultcredentials: writing to file /home/mouhammad/.config/firebase/manhaj499_gmail_com_application_default_credentials.json
+[debug] [2026-04-24T22:43:52.977Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:52.978Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:52.980Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/assiriktours-e576f/sites pageToken=&pageSize=10
+[debug] [2026-04-24T22:43:54.225Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/assiriktours-e576f/sites 200
+[debug] [2026-04-24T22:43:54.225Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/assiriktours-e576f/sites {"sites":[{"name":"projects/assiriktours-e576f/sites/assiriktours-e576f","defaultUrl":"https://assiriktours-e576f.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2026-04-24T22:43:54.227Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:54.227Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:54.227Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/assiriktours-e576f/sites 
+[debug] [2026-04-24T22:43:55.453Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/assiriktours-e576f/sites 200
+[debug] [2026-04-24T22:43:55.453Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/assiriktours-e576f/sites {"sites":[{"name":"projects/assiriktours-e576f/sites/assiriktours-e576f","defaultUrl":"https://assiriktours-e576f.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2026-04-24T22:43:55.453Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:55.453Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:43:55.454Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/assiriktours-e576f/webApps/-/config [none]
+[debug] [2026-04-24T22:43:56.166Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/assiriktours-e576f/webApps/-/config 200
+[debug] [2026-04-24T22:43:56.167Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/assiriktours-e576f/webApps/-/config {"projectId":"assiriktours-e576f","appId":"1:458159028958:web:f32b7e434459797109a04f","storageBucket":"assiriktours-e576f.firebasestorage.app","apiKey":"AIzaSyCc0KhaFzR3YrAR31suhWvi-cGvdFBlj1U","authDomain":"assiriktours-e576f.firebaseapp.com","messagingSenderId":"458159028958","measurementId":"G-JLE5HCJSHT","projectNumber":"458159028958","version":"2"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2026-04-24T22:44:15.570Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:44:15.571Z] Checked if tokens are valid: true, expires at: 1777072425421
+[debug] [2026-04-24T22:44:15.571Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/assiriktours-e576f/sites/assiriktours-e576f [none]
+[debug] [2026-04-24T22:44:16.417Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/assiriktours-e576f/sites/assiriktours-e576f 200
+[debug] [2026-04-24T22:44:16.417Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/assiriktours-e576f/sites/assiriktours-e576f {"name":"projects/assiriktours-e576f/sites/assiriktours-e576f","defaultUrl":"https://assiriktours-e576f.web.app","type":"DEFAULT_SITE"}
+[info]   ▲ Next.js 14.2.3
+
+[info]   - Environments: .env.local
+
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info]    Collecting page data ...
+
+[info]    Generating static pages (0/38) ...
+
+[info]    Generating static pages (9/38) 
+
+[info]  ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "https://assiriktours-e576f.web.app". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+
+[info]    Generating static pages (18/38) 
+
+[info]    Generating static pages (28/38) 
+
+[info]  ✓ Generating static pages (38/38)
+
+[info]    Finalizing page optimization ...
+   Collecting build traces ...
+

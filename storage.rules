@@ -1,0 +1,63 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() &&
+        exists(/databases/$(bucket)/documents/admins/$(request.auth.uid));
+    }
+    
+    function isValidImage() {
+      return request.resource.contentType.matches('image/.*') &&
+        request.resource.size < 5 * 1024 * 1024; // Max 5MB
+    }
+    
+    function isPdf() {
+      return request.resource.contentType == 'application/pdf' &&
+        request.resource.size < 10 * 1024 * 1024; // Max 10MB
+    }
+    
+    // Dossiers publics en lecture seule
+    match /properties/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImage();
+    }
+    
+    match /vehicles/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImage();
+    }
+    
+    match /trainings/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImage();
+    }
+    
+    match /blog/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImage();
+    }
+    
+    match /profiles/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImage();
+    }
+    
+    //_uploads - pour les fichiers temporaires
+    match /_uploads/{allPaths=**} {
+      allow write: if isAuthenticated() && (isValidImage() || isPdf());
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    //catch-all pour les autres chemins
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
