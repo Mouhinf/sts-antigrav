@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminDb } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
 import { newsletterSchema } from "@/lib/validations";
 import { newsletterRateLimit } from "@/lib/rate-limit";
 import { logApiError } from "@/lib/logger";
@@ -34,8 +34,11 @@ export async function POST(request: Request) {
       );
     }
 
+    // Firestore Admin
+    const db = await getAdminDb();
+    
     // Vérifier si déjà abonné
-    const existing = await adminDb
+    const existing = await db
       .collection("newsletter_subscribers")
       .where("email", "==", sanitizedEmail)
       .limit(1)
@@ -48,8 +51,7 @@ export async function POST(request: Request) {
       }, { status: 200 });
     }
 
-    // Firestore Admin
-    await adminDb.collection("newsletter_subscribers").add({
+    await db.collection("newsletter_subscribers").add({
       email: sanitizedEmail,
       subscribedAt: new Date().toISOString(),
       ip: ip.slice(0, 45),

@@ -1,4 +1,4 @@
-import { adminDb } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
 import { unstable_cache } from "next/cache";
 import type { QueryDocumentSnapshot } from "firebase-admin/firestore";
 import type { DocumentData } from "firebase-admin/firestore";
@@ -23,13 +23,13 @@ interface PaginatedResult<T> {
 
 export const getProperties = unstable_cache(
   async (limit = 10, lastDoc?: string): Promise<PaginatedResult<Property & { id: string }>> => {
-    let query = adminDb
+    let query = await getAdminDb()
       .collection("properties")
       .orderBy("createdAt", "desc")
       .limit(limit);
 
     if (lastDoc) {
-      const lastDocSnapshot = await adminDb.collection("properties").doc(lastDoc).get();
+      const lastDocSnapshot = await getAdminDb().collection("properties").doc(lastDoc).get();
       if (lastDocSnapshot.exists) {
         query = query.startAfter(lastDocSnapshot);
       }
@@ -53,7 +53,7 @@ export const getProperties = unstable_cache(
 
 export const getPropertyById = unstable_cache(
   async (id: string): Promise<(Property & { id: string }) | null> => {
-    const doc = await adminDb.collection("properties").doc(id).get();
+    const doc = await getAdminDb().collection("properties").doc(id).get();
     if (!doc.exists) return null;
     return { id: doc.id, ...doc.data() } as Property & { id: string };
   },
@@ -63,7 +63,7 @@ export const getPropertyById = unstable_cache(
 
 export const getFeaturedProperties = unstable_cache(
   async (limit = 6): Promise<(Property & { id: string })[]> => {
-    const snapshot = await adminDb
+    const snapshot = await getAdminDb()
       .collection("properties")
       .where("featured", "==", true)
       .where("status", "==", "available")
@@ -84,14 +84,14 @@ export const getFeaturedProperties = unstable_cache(
 
 export const getVehicles = unstable_cache(
   async (limit = 10, lastDoc?: string): Promise<PaginatedResult<Vehicle & { id: string }>> => {
-    let query = adminDb
+    let query = await getAdminDb()
       .collection("vehicles")
       .where("status", "==", "available")
       .orderBy("createdAt", "desc")
       .limit(limit);
 
     if (lastDoc) {
-      const lastDocSnapshot = await adminDb.collection("vehicles").doc(lastDoc).get();
+      const lastDocSnapshot = await getAdminDb().collection("vehicles").doc(lastDoc).get();
       if (lastDocSnapshot.exists) {
         query = query.startAfter(lastDocSnapshot);
       }
@@ -115,7 +115,7 @@ export const getVehicles = unstable_cache(
 
 export const getVehicleById = unstable_cache(
   async (id: string): Promise<(Vehicle & { id: string }) | null> => {
-    const doc = await adminDb.collection("vehicles").doc(id).get();
+    const doc = await getAdminDb().collection("vehicles").doc(id).get();
     if (!doc.exists) return null;
     return { id: doc.id, ...doc.data() } as Vehicle & { id: string };
   },
@@ -127,14 +127,14 @@ export const getVehicleById = unstable_cache(
 
 export const getTrainings = unstable_cache(
   async (limit = 10, lastDoc?: string): Promise<PaginatedResult<Training & { id: string }>> => {
-    let query = adminDb
+    let query = await getAdminDb()
       .collection("trainings")
       .where("status", "==", "active")
       .orderBy("createdAt", "desc")
       .limit(limit);
 
     if (lastDoc) {
-      const lastDocSnapshot = await adminDb.collection("trainings").doc(lastDoc).get();
+      const lastDocSnapshot = await getAdminDb().collection("trainings").doc(lastDoc).get();
       if (lastDocSnapshot.exists) {
         query = query.startAfter(lastDocSnapshot);
       }
@@ -158,7 +158,7 @@ export const getTrainings = unstable_cache(
 
 export const getTrainingById = unstable_cache(
   async (id: string): Promise<(Training & { id: string }) | null> => {
-    const doc = await adminDb.collection("trainings").doc(id).get();
+    const doc = await getAdminDb().collection("trainings").doc(id).get();
     if (!doc.exists) return null;
     return { id: doc.id, ...doc.data() } as Training & { id: string };
   },
@@ -170,14 +170,14 @@ export const getTrainingById = unstable_cache(
 
 export const getBlogPosts = unstable_cache(
   async (limit = 10, lastDoc?: string): Promise<PaginatedResult<BlogPost & { id: string }>> => {
-    let query = adminDb
+    let query = await getAdminDb()
       .collection("blog_posts")
       .where("published", "==", true)
       .orderBy("publishedAt", "desc")
       .limit(limit);
 
     if (lastDoc) {
-      const lastDocSnapshot = await adminDb.collection("blog_posts").doc(lastDoc).get();
+      const lastDocSnapshot = await getAdminDb().collection("blog_posts").doc(lastDoc).get();
       if (lastDocSnapshot.exists) {
         query = query.startAfter(lastDocSnapshot);
       }
@@ -201,7 +201,7 @@ export const getBlogPosts = unstable_cache(
 
 export const getBlogPostBySlug = unstable_cache(
   async (slug: string): Promise<(BlogPost & { id: string }) | null> => {
-    const snapshot = await adminDb
+    const snapshot = await getAdminDb()
       .collection("blog_posts")
       .where("slug", "==", slug)
       .where("published", "==", true)
@@ -218,7 +218,7 @@ export const getBlogPostBySlug = unstable_cache(
 
 export const getRelatedPosts = unstable_cache(
   async (category: string, excludeId: string, limit = 3): Promise<(BlogPost & { id: string })[]> => {
-    const snapshot = await adminDb
+    const snapshot = await getAdminDb()
       .collection("blog_posts")
       .where("category", "==", category)
       .where("published", "==", true)
@@ -248,6 +248,7 @@ export async function getDashboardStats(): Promise<{
   totalProperties: number;
   totalVehicles: number;
 }> {
+  const db = await getAdminDb();
   const [
     messagesSnap,
     unreadMessagesSnap,
@@ -256,12 +257,12 @@ export async function getDashboardStats(): Promise<{
     propertiesSnap,
     vehiclesSnap,
   ] = await Promise.all([
-    adminDb.collection("messages").count().get(),
-    adminDb.collection("messages").where("status", "==", "new").count().get(),
-    adminDb.collection("quotes").where("status", "==", "pending").count().get(),
-    adminDb.collection("bookings").where("status", "==", "pending").count().get(),
-    adminDb.collection("properties").count().get(),
-    adminDb.collection("vehicles").count().get(),
+    db.collection("messages").count().get(),
+    db.collection("messages").where("status", "==", "new").count().get(),
+    db.collection("quotes").where("status", "==", "pending").count().get(),
+    db.collection("bookings").where("status", "==", "pending").count().get(),
+    db.collection("properties").count().get(),
+    db.collection("vehicles").count().get(),
   ]);
 
   return {
@@ -275,7 +276,7 @@ export async function getDashboardStats(): Promise<{
 }
 
 export async function getRecentMessages(limit = 5): Promise<(Message & { id: string })[]> {
-  const snapshot = await adminDb
+  const snapshot = await getAdminDb()
     .collection("messages")
     .orderBy("createdAt", "desc")
     .limit(limit)
@@ -288,7 +289,7 @@ export async function getRecentMessages(limit = 5): Promise<(Message & { id: str
 }
 
 export async function getRecentQuotes(limit = 5): Promise<(Quote & { id: string })[]> {
-  const snapshot = await adminDb
+  const snapshot = await getAdminDb()
     .collection("quotes")
     .orderBy("createdAt", "desc")
     .limit(limit)
@@ -301,7 +302,7 @@ export async function getRecentQuotes(limit = 5): Promise<(Quote & { id: string 
 }
 
 export async function getRecentBookings(limit = 5): Promise<(Booking & { id: string })[]> {
-  const snapshot = await adminDb
+  const snapshot = await getAdminDb()
     .collection("bookings")
     .orderBy("createdAt", "desc")
     .limit(limit)

@@ -15,7 +15,7 @@ const FacebookIcon = (props: any) => (
 const LinkedinIcon = (props: any) => (
   <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
 );
-import { adminDb } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/Button";
 import { BlogViewCounter } from "./BlogViewCounter";
@@ -26,8 +26,9 @@ interface Props {
 
 // SSG Params
 export async function generateStaticParams() {
-  if (!adminDb) return [];
-  const snapshot = await adminDb.collection("blog_posts").where("published", "==", true).get();
+  const db = await getAdminDb();
+  if (!db) return [];
+  const snapshot = await db.collection("blog_posts").where("published", "==", true).get();
   return snapshot.docs.map((doc: any) => ({
     slug: doc.data().slug || doc.id,
   }));
@@ -51,12 +52,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 async function getPost(slug: string) {
+  const db = await getAdminDb();
+  if (!db) return null;
+  
   // Query by slug or by ID
-  let snapshot = await adminDb.collection("blog_posts").where("slug", "==", slug).get();
+  let snapshot = await db.collection("blog_posts").where("slug", "==", slug).get();
 
   if (snapshot.empty) {
     // Try by ID if slug fails
-    const doc = await adminDb.collection("blog_posts").doc(slug).get();
+    const doc = await db.collection("blog_posts").doc(slug).get();
     if (doc.exists) return { id: doc.id, ...doc.data() } as any;
     return null;
   }
@@ -78,7 +82,8 @@ export default async function BlogDetailPage({ params }: Props) {
     notFound();
   }
 
-  const recentPostsSnapshot = await adminDb
+  const db = await getAdminDb();
+  const recentPostsSnapshot = db
     .collection("blog_posts")
     .where("published", "==", true)
     .orderBy("createdAt", "desc")

@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { adminDb } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://sts-sofitrans.vercel.app";
@@ -22,9 +22,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const propertyRoutes: MetadataRoute.Sitemap = [];
     const blogRoutes: MetadataRoute.Sitemap = [];
+    const db = await getAdminDb();
 
     try {
-      const propertiesSnapshot = await adminDb.collection("properties").get();
+      const propertiesSnapshot = await db.collection("properties").get();
       propertiesSnapshot.docs.forEach((doc: any) => {
         propertyRoutes.push({
           url: `${baseUrl}/services/immobilier/${doc.id}`,
@@ -38,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     try {
-      const blogSnapshot = await adminDb.collection("blog_posts").where("published", "==", true).get();
+      const blogSnapshot = await db.collection("blog_posts").where("published", "==", true).get();
       blogSnapshot.docs.forEach((doc: any) => {
         const data = doc.data();
         blogRoutes.push({

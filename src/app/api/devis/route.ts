@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminDb } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
 import { quoteSchema } from "@/lib/validations";
 import { quoteRateLimit } from "@/lib/rate-limit";
 import { logApiError } from "@/lib/logger";
@@ -36,7 +36,8 @@ export async function POST(request: Request) {
     };
 
     // Firestore
-    await adminDb.collection("quotes").add({
+    const db = await getAdminDb();
+    await db.collection("quotes").add({
       ...sanitizedData,
       createdAt: new Date().toISOString(),
       status: "pending",

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminDb } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
 import { contactSchema } from "@/lib/validations";
 import { contactRateLimit } from "@/lib/rate-limit";
 import { logApiError } from "@/lib/logger";
@@ -36,7 +36,8 @@ export async function POST(request: Request) {
     };
 
     // Firestore
-    await adminDb.collection("messages").add({
+    const db = await getAdminDb();
+    await db.collection("messages").add({
       ...sanitizedData,
       createdAt: new Date().toISOString(),
       status: "new",

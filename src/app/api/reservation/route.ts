@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminDb } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
 import { bookingSchema } from "@/lib/validations";
 import { bookingRateLimit } from "@/lib/rate-limit";
 import { logApiError } from "@/lib/logger";
@@ -36,7 +36,8 @@ export async function POST(request: Request) {
     };
 
     // Firestore
-    await adminDb.collection("bookings").add({
+    const db = await getAdminDb();
+    await db.collection("bookings").add({
       ...sanitizedData,
       startDate: validatedData.startDate,
       endDate: validatedData.endDate || null,
