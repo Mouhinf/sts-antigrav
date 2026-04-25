@@ -134,43 +134,34 @@ export const Navbar = () => {
         </button>
       </div>
 
-      {/* MOBILE MENU */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 bg-white z-[9999] md:hidden pt-24 px-8 overflow-y-auto"
-          >
-            <div className="flex flex-col gap-8 max-w-sm mx-auto">
+      {/* MOBILE MENU - Rendered at root level to ensure it covers everything */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 bg-white z-[99999] md:hidden overflow-y-auto">
+          <div className="pt-24 px-8">
+            <div className="flex flex-col gap-8">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">Accueil</Link>
+              <Link href="/a-propos" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">À propos</Link>
               <div className="flex flex-col gap-4">
-                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">Accueil</Link>
-                <Link href="/a-propos" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">À propos</Link>
-                <div className="flex flex-col gap-4 mt-2">
-                  <span className="text-xs font-bold text-sts-green tracking-[0.3em] uppercase">Nos Services</span>
-                  <div className="grid gap-3">
-                    {services.map((s) => (
-                      <Link 
-                        key={s.href} 
-                        href={s.href} 
-                        onClick={() => setIsMobileMenuOpen(false)} 
-                        className="text-xl font-medium text-slate-500 hover:text-sts-green transition-colors"
-                      >
-                        {s.title}
-                      </Link>
-                    ))}
-                  </div>
+                <span className="text-xs font-bold text-sts-green tracking-[0.3em] uppercase">Nos Services</span>
+                <div className="grid gap-3">
+                  {services.map((s) => (
+                    <Link 
+                      key={s.href} 
+                      href={s.href} 
+                      onClick={() => setIsMobileMenuOpen(false)} 
+                      className="text-xl font-medium text-slate-500 hover:text-sts-green transition-colors"
+                    >
+                      {s.title}
+                    </Link>
+                  ))}
                 </div>
-                <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">Blog</Link>
-                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">Contact</Link>
               </div>
-              <Button variant="primary" size="lg" className="w-full mt-4 h-14">Demande de devis</Button>
+              <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">Blog</Link>
+              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">Contact</Link>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
