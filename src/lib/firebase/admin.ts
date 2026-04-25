@@ -4,12 +4,15 @@ if (typeof window !== 'undefined') {
   throw new Error("Le SDK Firebase Admin ne peut pas être utilisé côté client.");
 }
 
+const getPrivateKey = () => {
+  const key = process.env.FIREBASE_ADMIN_PRIVATE_KEY || "";
+  return key.replace(/^"|"$/g, "").replace(/\\n/g, "\n");
+};
+
 const firebaseAdminConfig = {
   projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
   clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-  privateKey: (process.env.FIREBASE_ADMIN_PRIVATE_KEY || "")
-    .replace(/\\n/g, "\n")
-    .replace(/n/g, "\n"),
+  privateKey: getPrivateKey(),
 };
 
 const isConfigured = 
@@ -17,15 +20,35 @@ const isConfigured =
   process.env.FIREBASE_ADMIN_CLIENT_EMAIL && 
   process.env.FIREBASE_ADMIN_PRIVATE_KEY;
 
-const adminApp = (admin.apps.length > 0)
-  ? admin.apps[0]
-  : isConfigured 
-    ? admin.initializeApp({
-        credential: admin.credential.cert(firebaseAdminConfig),
-      })
-    : null;
+let adminApp: admin.app.App | null = null;
+let adminDb: admin.firestore.Firestore | null = null;
+let adminAuth: admin.auth.Auth | null = null;
 
-const adminDb = adminApp ? admin.firestore() : (null as any);
-const adminAuth = adminApp ? admin.auth() : (null as any);
+const getAdminApp = () => {
+  if (!adminApp && isConfigured) {
+    adminApp = admin.initializeApp({
+      credential: admin.credential.cert(firebaseAdminConfig),
+    });
+  }
+  return adminApp;
+};
 
-export { adminApp, adminDb, adminAuth };
+const getAdminDb = () => {
+  if (!adminDb) {
+    const app = getAdminApp();
+    if (app) adminDb = app.firestore();
+  }
+  return adminDb;
+};
+
+const getAdminAuth = () => {
+  if (!adminAuth) {
+    const app = getAdminApp();
+    if (app) adminAuth = app.auth();
+  }
+  return adminAuth;
+};
+
+export const adminApp = getAdminApp();
+export const adminDb = getAdminDb();
+export const adminAuth = getAdminAuth();
