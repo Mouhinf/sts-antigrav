@@ -133,11 +133,22 @@ export const Navbar = () => {
           </div>
         </button>
       </div>
+    </nav>
 
-      {/* MOBILE MENU - Rendered at root level to ensure it covers everything */}
+{/* MOBILE MENU - use CSS isolate and high z-index */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 bg-white z-[99999] md:hidden overflow-y-auto">
+        <div 
+          className="fixed inset-0 bg-white !z-[2147483647] md:hidden overflow-y-auto"
+          style={{ isolation: 'isolate' }}
+        >
           <div className="pt-24 px-8">
+            {/* Close button */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center bg-sts-black text-white rounded-full"
+            >
+              ✕
+            </button>
             <div className="flex flex-col gap-8">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">Accueil</Link>
               <Link href="/a-propos" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-bold text-sts-black tracking-tight">À propos</Link>
@@ -162,6 +173,5 @@ export const Navbar = () => {
           </div>
         </div>
       )}
-    </nav>
   );
 };
