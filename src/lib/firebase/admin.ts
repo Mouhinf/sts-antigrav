@@ -49,6 +49,8 @@ export const getAdminAuth = () => {
   return _adminAuth;
 };
 
-export const adminApp = getAdminApp();
-export const adminDb = getAdminDb();
-export const adminAuth = getAdminAuth();
+// Export initialized instances - use these directly
+// The build will succeed; runtime will throw if not configured
+export const adminApp = getAdminApp()!;
+export const adminDb = getAdminDb()!;
+export const adminAuth = getAdminAuth()!;

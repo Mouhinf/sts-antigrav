@@ -26,6 +26,7 @@ interface Props {
 
 // SSG Params
 export async function generateStaticParams() {
+  if (!adminDb) return [];
   const snapshot = await adminDb.collection("blog_posts").where("published", "==", true).get();
   return snapshot.docs.map((doc: any) => ({
     slug: doc.data().slug || doc.id,
