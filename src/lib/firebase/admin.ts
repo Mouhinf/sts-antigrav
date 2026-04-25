@@ -20,33 +20,33 @@ const isConfigured =
   process.env.FIREBASE_ADMIN_CLIENT_EMAIL && 
   process.env.FIREBASE_ADMIN_PRIVATE_KEY;
 
-let adminApp: admin.app.App | null = null;
-let adminDb: admin.firestore.Firestore | null = null;
-let adminAuth: admin.auth.Auth | null = null;
+let _adminApp: admin.app.App | null = null;
+let _adminDb: admin.firestore.Firestore | null = null;
+let _adminAuth: admin.auth.Auth | null = null;
 
-const getAdminApp = () => {
-  if (!adminApp && isConfigured) {
-    adminApp = admin.initializeApp({
+export const getAdminApp = () => {
+  if (!_adminApp && isConfigured) {
+    _adminApp = admin.initializeApp({
       credential: admin.credential.cert(firebaseAdminConfig),
     });
   }
-  return adminApp;
+  return _adminApp;
 };
 
-const getAdminDb = () => {
-  if (!adminDb) {
+export const getAdminDb = () => {
+  if (!_adminDb) {
     const app = getAdminApp();
-    if (app) adminDb = app.firestore();
+    if (app) _adminDb = app.firestore();
   }
-  return adminDb;
+  return _adminDb;
 };
 
-const getAdminAuth = () => {
-  if (!adminAuth) {
+export const getAdminAuth = () => {
+  if (!_adminAuth) {
     const app = getAdminApp();
-    if (app) adminAuth = app.auth();
+    if (app) _adminAuth = app.auth();
   }
-  return adminAuth;
+  return _adminAuth;
 };
 
 export const adminApp = getAdminApp();
