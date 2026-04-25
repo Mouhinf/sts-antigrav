@@ -38,7 +38,8 @@ export async function POST(request: Request) {
     const db = await getAdminDb();
     
     // Vérifier si déjà abonné
-    const existing = await db
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const existing = await db!
       .collection("newsletter_subscribers")
       .where("email", "==", sanitizedEmail)
       .limit(1)
