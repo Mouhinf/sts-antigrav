@@ -24,13 +24,16 @@ interface PaginatedResult<T> {
 export const getProperties = unstable_cache(
   async (limit = 10, lastDoc?: string): Promise<PaginatedResult<Property & { id: string }>> => {
     const db = await getAdminDb();
-    let query = db
+    if (!db) return { data: [], hasMore: false, lastDoc: null };
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    let query = db!
       .collection("properties")
       .orderBy("createdAt", "desc")
       .limit(limit);
 
     if (lastDoc) {
-      const lastDocSnapshot = await db.collection("properties").doc(lastDoc).get();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const lastDocSnapshot = await db!.collection("properties").doc(lastDoc).get();
       if (lastDocSnapshot.exists) {
         query = query.startAfter(lastDocSnapshot);
       }
@@ -54,7 +57,10 @@ export const getProperties = unstable_cache(
 
 export const getPropertyById = unstable_cache(
   async (id: string): Promise<(Property & { id: string }) | null> => {
-    const doc = await getAdminDb().collection("properties").doc(id).get();
+    const db = await getAdminDb();
+    if (!db) return null;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const doc = await db!.collection("properties").doc(id).get();
     if (!doc.exists) return null;
     return { id: doc.id, ...doc.data() } as Property & { id: string };
   },
@@ -64,7 +70,8 @@ export const getPropertyById = unstable_cache(
 
 export const getFeaturedProperties = unstable_cache(
   async (limit = 6): Promise<(Property & { id: string })[]> => {
-    const snapshot = await getAdminDb()
+    const db = await getAdminDb(); if (!db) return []; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const snapshot = await db!
       .collection("properties")
       .where("featured", "==", true)
       .where("status", "==", "available")
@@ -92,7 +99,8 @@ export const getVehicles = unstable_cache(
       .limit(limit);
 
     if (lastDoc) {
-      const lastDocSnapshot = await getAdminDb().collection("vehicles").doc(lastDoc).get();
+      const lastDocSnapshot = const db = await getAdminDb(); if (!db) return null; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await db!.collection("vehicles").doc(lastDoc).get();
       if (lastDocSnapshot.exists) {
         query = query.startAfter(lastDocSnapshot);
       }
@@ -116,7 +124,8 @@ export const getVehicles = unstable_cache(
 
 export const getVehicleById = unstable_cache(
   async (id: string): Promise<(Vehicle & { id: string }) | null> => {
-    const doc = await getAdminDb().collection("vehicles").doc(id).get();
+    const doc = const db = await getAdminDb(); if (!db) return null; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await db!.collection("vehicles").doc(id).get();
     if (!doc.exists) return null;
     return { id: doc.id, ...doc.data() } as Vehicle & { id: string };
   },
@@ -135,7 +144,8 @@ export const getTrainings = unstable_cache(
       .limit(limit);
 
     if (lastDoc) {
-      const lastDocSnapshot = await getAdminDb().collection("trainings").doc(lastDoc).get();
+      const lastDocSnapshot = const db = await getAdminDb(); if (!db) return null; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await db!.collection("trainings").doc(lastDoc).get();
       if (lastDocSnapshot.exists) {
         query = query.startAfter(lastDocSnapshot);
       }
@@ -159,7 +169,8 @@ export const getTrainings = unstable_cache(
 
 export const getTrainingById = unstable_cache(
   async (id: string): Promise<(Training & { id: string }) | null> => {
-    const doc = await getAdminDb().collection("trainings").doc(id).get();
+    const doc = const db = await getAdminDb(); if (!db) return null; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await db!.collection("trainings").doc(id).get();
     if (!doc.exists) return null;
     return { id: doc.id, ...doc.data() } as Training & { id: string };
   },
@@ -178,7 +189,8 @@ export const getBlogPosts = unstable_cache(
       .limit(limit);
 
     if (lastDoc) {
-      const lastDocSnapshot = await getAdminDb().collection("blog_posts").doc(lastDoc).get();
+      const lastDocSnapshot = const db = await getAdminDb(); if (!db) return null; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await db!.collection("blog_posts").doc(lastDoc).get();
       if (lastDocSnapshot.exists) {
         query = query.startAfter(lastDocSnapshot);
       }
@@ -202,7 +214,8 @@ export const getBlogPosts = unstable_cache(
 
 export const getBlogPostBySlug = unstable_cache(
   async (slug: string): Promise<(BlogPost & { id: string }) | null> => {
-    const snapshot = await getAdminDb()
+    const db = await getAdminDb(); if (!db) return []; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const snapshot = await db!
       .collection("blog_posts")
       .where("slug", "==", slug)
       .where("published", "==", true)
@@ -219,7 +232,8 @@ export const getBlogPostBySlug = unstable_cache(
 
 export const getRelatedPosts = unstable_cache(
   async (category: string, excludeId: string, limit = 3): Promise<(BlogPost & { id: string })[]> => {
-    const snapshot = await getAdminDb()
+    const db = await getAdminDb(); if (!db) return []; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const snapshot = await db!
       .collection("blog_posts")
       .where("category", "==", category)
       .where("published", "==", true)
@@ -277,7 +291,8 @@ export async function getDashboardStats(): Promise<{
 }
 
 export async function getRecentMessages(limit = 5): Promise<(Message & { id: string })[]> {
-  const snapshot = await getAdminDb()
+  const db = await getAdminDb(); if (!db) return []; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const snapshot = await db!
     .collection("messages")
     .orderBy("createdAt", "desc")
     .limit(limit)
@@ -290,7 +305,8 @@ export async function getRecentMessages(limit = 5): Promise<(Message & { id: str
 }
 
 export async function getRecentQuotes(limit = 5): Promise<(Quote & { id: string })[]> {
-  const snapshot = await getAdminDb()
+  const db = await getAdminDb(); if (!db) return []; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const snapshot = await db!
     .collection("quotes")
     .orderBy("createdAt", "desc")
     .limit(limit)
@@ -303,7 +319,8 @@ export async function getRecentQuotes(limit = 5): Promise<(Quote & { id: string 
 }
 
 export async function getRecentBookings(limit = 5): Promise<(Booking & { id: string })[]> {
-  const snapshot = await getAdminDb()
+  const db = await getAdminDb(); if (!db) return []; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const snapshot = await db!
     .collection("bookings")
     .orderBy("createdAt", "desc")
     .limit(limit)
