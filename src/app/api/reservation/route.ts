@@ -37,7 +37,8 @@ export async function POST(request: Request) {
 
     // Firestore
     const db = await getAdminDb();
-    await db.collection("bookings").add({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await db!.collection("bookings").add({
       ...sanitizedData,
       startDate: validatedData.startDate,
       endDate: validatedData.endDate || null,

@@ -37,7 +37,8 @@ export async function POST(request: Request) {
 
     // Firestore
     const db = await getAdminDb();
-    await db.collection("messages").add({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await db!.collection("messages").add({
       ...sanitizedData,
       createdAt: new Date().toISOString(),
       status: "new",

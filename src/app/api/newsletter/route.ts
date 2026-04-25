@@ -51,7 +51,8 @@ export async function POST(request: Request) {
       }, { status: 200 });
     }
 
-    await db.collection("newsletter_subscribers").add({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await db!.collection("newsletter_subscribers").add({
       email: sanitizedEmail,
       subscribedAt: new Date().toISOString(),
       ip: ip.slice(0, 45),

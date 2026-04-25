@@ -28,7 +28,8 @@ interface Props {
 export async function generateStaticParams() {
   const db = await getAdminDb();
   if (!db) return [];
-  const snapshot = await db.collection("blog_posts").where("published", "==", true).get();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const snapshot = await db!.collection("blog_posts").where("published", "==", true).get();
   return snapshot.docs.map((doc: any) => ({
     slug: doc.data().slug || doc.id,
   }));
@@ -56,11 +57,13 @@ async function getPost(slug: string) {
   if (!db) return null;
   
   // Query by slug or by ID
-  let snapshot = await db.collection("blog_posts").where("slug", "==", slug).get();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let snapshot = await db!.collection("blog_posts").where("slug", "==", slug).get();
 
   if (snapshot.empty) {
     // Try by ID if slug fails
-    const doc = await db.collection("blog_posts").doc(slug).get();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const doc = await db!.collection("blog_posts").doc(slug).get();
     if (doc.exists) return { id: doc.id, ...doc.data() } as any;
     return null;
   }

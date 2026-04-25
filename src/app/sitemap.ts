@@ -25,7 +25,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const db = await getAdminDb();
 
     try {
-      const propertiesSnapshot = await db.collection("properties").get();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const propertiesSnapshot = await db!.collection("properties").get();
       propertiesSnapshot.docs.forEach((doc: any) => {
         propertyRoutes.push({
           url: `${baseUrl}/services/immobilier/${doc.id}`,
@@ -39,7 +40,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     try {
-      const blogSnapshot = await db.collection("blog_posts").where("published", "==", true).get();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const blogSnapshot = await db!.collection("blog_posts").where("published", "==", true).get();
       blogSnapshot.docs.forEach((doc: any) => {
         const data = doc.data();
         blogRoutes.push({

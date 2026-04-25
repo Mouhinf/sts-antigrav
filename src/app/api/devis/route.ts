@@ -37,7 +37,8 @@ export async function POST(request: Request) {
 
     // Firestore
     const db = await getAdminDb();
-    await db.collection("quotes").add({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await db!.collection("quotes").add({
       ...sanitizedData,
       createdAt: new Date().toISOString(),
       status: "pending",
