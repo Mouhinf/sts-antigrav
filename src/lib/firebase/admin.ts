@@ -1,72 +1,69 @@
-import admin from "firebase-admin";
-
-if (typeof window !== 'undefined') {
-  throw new Error("Le SDK Firebase Admin ne peut pas être utilisé côté client.");
-}
-
-const getPrivateKey = () => {
-  const key = process.env.FIREBASE_ADMIN_PRIVATE_KEY || "";
-  return key.replace(/^"|"$/g, "").replace(/\\n/g, "\n");
-};
-
-const isConfigured = 
-  process.env.FIREBASE_ADMIN_PROJECT_ID && 
-  process.env.FIREBASE_ADMIN_CLIENT_EMAIL && 
-  process.env.FIREBASE_ADMIN_PRIVATE_KEY;
+import type admin from "firebase-admin";
+import type { Firestore } from "firebase-admin/firestore";
+import type { Auth } from "firebase-admin/auth";
 
 let _adminApp: admin.app.App | null = null;
-let _adminDb: admin.firestore.Firestore | null = null;
-let _adminAuth: admin.auth.Auth | null = null;
+let _adminDb: Firestore | null = null;
+let _adminAuth: Auth | null = null;
 
-const _initApp = () => {
-  if (!_adminApp && isConfigured) {
-    const firebaseAdminConfig = {
-      projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-      privateKey: getPrivateKey(),
-    };
-    _adminApp = admin.initializeApp({
-      credential: admin.credential.cert(firebaseAdminConfig),
-    });
+const getPrivateKey = () => {
+  let key = process.env.FIREBASE_ADMIN_PRIVATE_KEY || "";
+  if (!key) return key;
+  
+  // Remove outer quotes if present
+  if (key.startsWith('"') && key.endsWith('"')) {
+    key = key.slice(1, -1);
   }
-  return _adminApp;
+  
+  // Replace \n with actual newlines - handle multiple patterns
+  key = key.replace(/\\n/g, '\n');
+  
+  return key;
 };
 
-const _getDb = () => {
-  if (!_adminDb) {
-    const app = _initApp();
-    if (app) _adminDb = app.firestore();
+const isConfigured = () => {
+  return !!(process.env.FIREBASE_ADMIN_PROJECT_ID && 
+    process.env.FIREBASE_ADMIN_CLIENT_EMAIL && 
+    process.env.FIREBASE_ADMIN_PRIVATE_KEY);
+};
+
+export const getAdminDb = async (): Promise<Firestore | null> => {
+  if (!_adminDb && isConfigured()) {
+    const { default: admin } = await import('firebase-admin');
+    
+    if (!_adminApp) {
+      // Decode the key properly
+      const privateKey = getPrivateKey();
+      
+      _adminApp = admin.initializeApp({
+        projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+        privateKey: privateKey,
+      });
+    }
+    _adminDb = _adminApp.firestore();
   }
   return _adminDb;
 };
 
-const _getAuth = () => {
-  if (!_adminAuth) {
-    const app = _initApp();
-    if (app) _adminAuth = app.auth();
+export const getAdminAuth = async (): Promise<Auth | null> => {
+  if (!_adminAuth && isConfigured()) {
+    const { default: admin } = await import('firebase-admin');
+    
+    if (!_adminApp) {
+      const privateKey = getPrivateKey();
+      _adminApp = admin.initializeApp({
+        projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+        privateKey: privateKey,
+      });
+    }
+    _adminAuth = _adminApp.auth();
   }
   return _adminAuth;
 };
 
-export const getAdminApp = () => _initApp();
-export const getAdminDb = () => _getDb();
-export const getAdminAuth = () => _getAuth();
-
-// Lazy proxy for backwards compatibility
-const dbProxy = new Proxy({}, {
-  get(_target, prop) {
-    const db = _getDb();
-    return (db as any)?.[prop];
-  }
-});
-
-const authProxy = new Proxy({}, {
-  get(_target, prop) {
-    const auth = _getAuth();
-    return (auth as any)?.[prop];
-  }
-});
-
-export const adminDb = dbProxy as admin.firestore.Firestore;
-export const adminAuth = authProxy as admin.auth.Auth;
-export const adminApp = _initApp();
+// For backward compatibility - sync versions (use async ones when possible)
+export const adminDb: Firestore | null = null;
+export const adminAuth: Auth | null = null;
+export const adminApp: admin.app.App | null = null;
