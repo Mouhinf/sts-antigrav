@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { MobileMenu } from "@/components/layout/MobileMenu";
 
 const inter = Inter({ 
   subsets: ["latin"], 
@@ -65,6 +66,7 @@ export default function RootLayout({
           </a>
           
           <Navbar />
+          <MobileMenu />
           
           <main id="main-content" className="flex-grow">
             {children}
