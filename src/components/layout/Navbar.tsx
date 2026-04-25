@@ -93,36 +93,15 @@ export const Navbar = () => {
           <NavLink href="/contact" isScrolled={isScrolled}>Contact</NavLink>
         </div>
 
-        {/* CTA */}
+{/* CTA */}
         <div className="hidden md:block">
           <Button variant="primary" size="md" className="px-8 shadow-lg shadow-sts-green/20">Demande de devis</Button>
         </div>
 
-        {/* MOBILE TOGGLE (Custom Animated Hamburger) */}
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-          className="md:hidden relative w-10 h-10 flex items-center justify-center z-[70]"
-          aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          aria-expanded={isMobileMenuOpen}
-        >
-          <div className="flex flex-col gap-1.5 w-6">
-            <span className={cn(
-              "h-0.5 w-full bg-current transition-all duration-300 origin-left",
-              isMobileMenuOpen ? "rotate-45 translate-x-1" : "",
-              isScrolled || isMobileMenuOpen ? "text-sts-black" : "text-white"
-            )} />
-            <span className={cn(
-              "h-0.5 w-full bg-current transition-all duration-300",
-              isMobileMenuOpen ? "opacity-0 -translate-x-2" : "",
-              isScrolled || isMobileMenuOpen ? "text-sts-black" : "text-white"
-            )} />
-            <span className={cn(
-              "h-0.5 w-full bg-current transition-all duration-300 origin-left",
-              isMobileMenuOpen ? "-rotate-45 translate-x-1" : "",
-              isScrolled || isMobileMenuOpen ? "text-sts-black" : "text-white"
-            )} />
-          </div>
-</button>
+        {/* Desktop only hamburger indicator - mobile uses floating button */}
+        <div className="md:hidden w-10 h-10 flex items-center justify-center">
+          {/* Mobile menu is handled by MobileMenu component */}
+        </div>
       </div>
     </nav>
   );
