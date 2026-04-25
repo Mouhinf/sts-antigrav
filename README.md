@@ -254,7 +254,3 @@ Pour toute question ou problème :
 - Téléphone : +221 XX XXX XX XX
 
 ---
-
-<p align="center">
-  Développé avec ❤️ par DeepV Code pour STS Softrans
-</p>
