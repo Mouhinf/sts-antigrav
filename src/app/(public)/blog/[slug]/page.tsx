@@ -83,7 +83,8 @@ export default async function BlogDetailPage({ params }: Props) {
   }
 
   const db = await getAdminDb();
-  const recentPostsSnapshot = db
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const recentPostsSnapshot = db!
     .collection("blog_posts")
     .where("published", "==", true)
     .orderBy("createdAt", "desc")
