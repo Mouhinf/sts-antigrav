@@ -57,7 +57,10 @@ export const getProperties = unstable_cache(
 
 export const getPropertyById = unstable_cache(
   async (id: string): Promise<(Property & { id: string }) | null> => {
-    const doc = await getAdminDb().collection("properties").doc(id).get();
+    const db = await getAdminDb();
+    if (!db) return null;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const doc = await db!.collection("properties").doc(id).get();
     if (!doc.exists) return null;
     return { id: doc.id, ...doc.data() } as Property & { id: string };
   },
