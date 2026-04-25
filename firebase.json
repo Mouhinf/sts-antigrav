@@ -3,9 +3,14 @@
     "source": ".",
     "ignore": [
       "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/.git/**"
+    ],
+    "frameworks": {
+      "source": ".",
+      "framework": "nextjs"
+    }
   },
   "firestore": {
     "rules": "firestore.rules",
