@@ -2,140 +2,171 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/Button";
 import { ChevronDown } from "lucide-react";
 
 const services = [
   { title: "Immobilier", href: "/services/immobilier" },
-  { title: "Transport & Logistique", href: "/services/transport" },
-  { title: "Hygiène & Services", href: "/services/hygiene-services" },
+  { title: "Transport", href: "/services/transport" },
+  { title: "Hygiène", href: "/services/hygiene-services" },
   { title: "Agrobusiness", href: "/services/agrobusiness" },
-  { title: "Formation & Comptabilité", href: "/services/formation-comptabilite" },
-  { title: "Marketing & Commerce", href: "/services/marketing-commerce" },
+  { title: "Formation", href: "/services/formation-comptabilite" },
+  { title: "Marketing", href: "/services/marketing-commerce" },
 ];
 
-function NavLink({ href, children, isScrolled, active = false }: any) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        "font-medium transition-colors relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-sts-green after:transition-all",
-        isScrolled ? "text-sts-black hover:text-sts-green" : "text-white hover:text-white/80",
-        active ? "after:w-full" : "after:w-0 hover:after:w-full"
-      )}
-    >
-      {children}
-    </Link>
-  );
-}
+export function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-export const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuChecked, setMobileMenuChecked] = useState(false);
+  // Scroll effect
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', () => {
+      setScrolled(window.scrollY > 20);
+    });
+  }
 
   return (
     <>
-      {/* NAVBAR */}
-      <nav
-        className={cn(
-          "fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-4 px-6 md:px-12",
-          isScrolled ? "bg-white/95 backdrop-blur-md shadow-md py-2" : "bg-transparent"
-        )}
+      {/* ============= NAVBAR ============= */}
+      <nav 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 9998,
+          backgroundColor: scrolled ? 'rgba(255,255,255,0.95)' : 'transparent',
+          padding: scrolled ? '12px 24px' : '16px 24px',
+          transition: 'all 0.3s',
+          boxShadow: scrolled ? '0 2px 10px rgba(0,0,0,0.1)' : 'none'
+        }}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-sts-green rounded-lg flex items-center justify-center font-bold text-white text-xl">S</div>
-            <div className="flex flex-col leading-none">
-              <span className={cn("font-bold text-xl tracking-tighter", isScrolled ? "text-sts-black" : "text-white")}>STS</span>
-              <span className={cn("text-[10px] font-bold tracking-[0.2em]", isScrolled ? "text-sts-green" : "text-white/80")}>SOFITRANS</span>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          
+          {/* Logo */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+            <div style={{ width: 40, height: 40, backgroundColor: '#1A8C3E', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: 20 }}>S</div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontWeight: 'bold', fontSize: 20, color: scrolled ? '#0A0A0A' : 'white' }}>STS</span>
+              <span style={{ fontSize: 10, fontWeight: 'bold', color: scrolled ? '#1A8C3E' : 'rgba(255,255,255,0.8)', letterSpacing: '0.2em' }}>SOFITRANS</span>
             </div>
           </Link>
 
-          {/* DESKTOP NAV */}
-          <div className="hidden md:flex items-center gap-8">
-            <NavLink href="/" isScrolled={isScrolled}>Accueil</NavLink>
-            <NavLink href="/a-propos" isScrolled={isScrolled}>À propos</NavLink>
+          {/* Desktop Menu */}
+          <div className="desktop-menu" style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+            <Link href="/" style={{ color: scrolled ? '#0A0A0A' : 'white', textDecoration: 'none', fontWeight: 500 }}>Accueil</Link>
+            <Link href="/a-propos" style={{ color: scrolled ? '#0A0A0A' : 'white', textDecoration: 'none', fontWeight: 500 }}>À propos</Link>
             
-            <div className="relative group">
-              <button className={cn("flex items-center gap-1 font-medium transition-colors py-2", isScrolled ? "text-sts-black hover:text-sts-green" : "text-white hover:text-white/80")}>
-                Services <ChevronDown className="w-4 h-4" />
+            <div style={{ position: 'relative' }}>
+              <button style={{ color: scrolled ? '#0A0A0A' : 'white', background: 'none', border: 'none', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                Services <ChevronDown size={16} />
               </button>
-              <div className="absolute top-full left-0 mt-0 w-64 bg-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-3">
-                <div className="grid gap-1">
-                  {services.map((s) => (
-                    <Link key={s.href} href={s.href} className="block px-4 py-2 text-sm text-slate-600 hover:text-sts-green hover:bg-sts-green/5 rounded-lg">
-                      {s.title}
-                    </Link>
-                  ))}
-                </div>
+              <div className="desktop-dropdown" style={{ position: 'absolute', top: '100%', left: 0, backgroundColor: 'white', borderRadius: 12, boxShadow: '0 4px 20px rgba(0,0,0,0.15)', padding: 12, display: 'none', minWidth: 200 }}>
+                {services.map(s => (
+                  <Link key={s.href} href={s.href} style={{ display: 'block', padding: '8px 16px', color: '#333', textDecoration: 'none', borderRadius: 8 }}>
+                    {s.title}
+                  </Link>
+                ))}
               </div>
             </div>
-
-            <NavLink href="/blog" isScrolled={isScrolled}>Blog</NavLink>
-            <NavLink href="/contact" isScrolled={isScrolled}>Contact</NavLink>
+            
+            <Link href="/blog" style={{ color: scrolled ? '#0A0A0A' : 'white', textDecoration: 'none', fontWeight: 500 }}>Blog</Link>
+            <Link href="/contact" style={{ color: scrolled ? '#0A0A0A' : 'white', textDecoration: 'none', fontWeight: 500 }}>Contact</Link>
+            
+            <Link href="/contact" style={{ backgroundColor: '#1A8C3E', color: 'white', padding: '10px 20px', borderRadius: 8, textDecoration: 'none', fontWeight: 500 }}>
+              Devis
+            </Link>
           </div>
 
-          {/* CTA */}
-          <div className="hidden md:block">
-            <Button variant="primary" size="sm">Devis</Button>
-          </div>
-
-          {/* MOBILE MENU CHECKBOX (Pure CSS!) */}
-          <label className="md:hidden cursor-pointer w-10 h-10 flex items-center justify-center">
-            <input 
-              type="checkbox" 
-              className="peer sr-only"
-              checked={mobileMenuChecked}
-              onChange={(e) => setMobileMenuChecked(e.target.checked)}
-            />
-            <span className={cn("space-y-1.5", mobileMenuChecked && "hidden")}>
-              <span className={cn("block w-6 h-0.5 bg-current rounded-full", isScrolled ? "bg-sts-black" : "bg-white")} />
-              <span className={cn("block w-6 h-0.5 bg-current rounded-full", isScrolled ? "bg-sts-black" : "bg-white")} />
-              <span className={cn("block w-6 h-0.5 bg-current rounded-full", isScrolled ? "bg-sts-black" : "bg-white")} />
-            </span>
-            <span className={cn("text-2xl", !mobileMenuChecked && "hidden")}>✕</span>
-          </label>
+          {/* Mobile Hamburger */}
+          <button 
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="mobile-hamburger"
+            style={{ 
+              display: 'none', 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer',
+              padding: 8
+            }}
+          >
+            <div style={{ width: 24, height: 2, backgroundColor: scrolled ? '#0A0A0A' : 'white', marginBottom: 6 }} />
+            <div style={{ width: 24, height: 2, backgroundColor: scrolled ? '#0A0A0A' : 'white', marginBottom: 6 }} />
+            <div style={{ width: 24, height: 2, backgroundColor: scrolled ? '#0A0A0A' : 'white' }} />
+          </button>
         </div>
       </nav>
 
-      {/* MOBILE MENU PANEL (CSS-only, no JS animation) */}
-      <div 
-        className={cn(
-          "fixed inset-0 bg-white z-30 pt-20 px-6 md:hidden transition-transform duration-300",
-          !mobileMenuChecked && "-translate-y-full"
-        )}
-        style={{ top: '60px' }}
-      >
-        <div className="flex flex-col gap-6 pb-24">
-          <Link href="/" onClick={() => setMobileMenuChecked(false)} className="text-2xl font-bold text-sts-black">Accueil</Link>
-          <Link href="/a-propos" onClick={() => setMobileMenuChecked(false)} className="text-2xl font-bold text-sts-black">À propos</Link>
+      {/* ============= MOBILE MENU ============= */}
+      {menuOpen && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'white',
+            zIndex: 99999,
+            overflowY: 'auto',
+            paddingTop: 80,
+            padding: '80px 24px 40px'
+          }}
+        >
+          <button 
+            onClick={() => setMenuOpen(false)}
+            style={{
+              position: 'absolute',
+              top: 20,
+              right: 20,
+              width: 40,
+              height: 40,
+              backgroundColor: '#0A0A0A',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              fontSize: 20,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            ✕
+          </button>
           
-          <div className="flex flex-col gap-3">
-            <span className="text-xs font-bold text-sts-green tracking-widest">NOS SERVICES</span>
-            {services.map((s) => (
-              <Link 
-                key={s.href} 
-                href={s.href} 
-                onClick={() => setMobileMenuChecked(false)} 
-                className="text-lg text-slate-600"
-              >
-                {s.title}
-              </Link>
-            ))}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <Link href="/" onClick={() => setMenuOpen(false)} style={{ fontSize: 28, fontWeight: 'bold', color: '#0A0A0A', textDecoration: 'none' }}>Accueil</Link>
+            <Link href="/a-propos" onClick={() => setMenuOpen(false)} style={{ fontSize: 28, fontWeight: 'bold', color: '#0A0A0A', textDecoration: 'none' }}>À propos</Link>
+            
+            <div style={{ marginTop: 10 }}>
+              <span style={{ fontSize: 12, fontWeight: 'bold', color: '#1A8C3E', letterSpacing: '0.2em' }}>NOS SERVICES</span>
+              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {services.map(s => (
+                  <Link 
+                    key={s.href} 
+                    href={s.href} 
+                    onClick={() => setMenuOpen(false)} 
+                    style={{ fontSize: 18, color: '#555', textDecoration: 'none' }}
+                  >
+                    {s.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            
+            <Link href="/blog" onClick={() => setMenuOpen(false)} style={{ fontSize: 28, fontWeight: 'bold', color: '#0A0A0A', textDecoration: 'none' }}>Blog</Link>
+            <Link href="/contact" onClick={() => setMenuOpen(false)} style={{ fontSize: 28, fontWeight: 'bold', color: '#0A0A0A', textDecoration: 'none' }}>Contact</Link>
           </div>
-          
-          <Link href="/blog" onClick={() => setMobileMenuChecked(false)} className="text-2xl font-bold text-sts-black">Blog</Link>
-          <Link href="/contact" onClick={() => setMobileMenuChecked(false)} className="text-2xl font-bold text-sts-black">Contact</Link>
         </div>
-      </div>
+      )}
 
-      {/* CSS-only menu overlay */}
       <style jsx global>{`
-        input[type="checkbox"]:checked ~ .mobile-panel {
-          transform: translateY(0) !important;
+        @media (max-width: 768px) {
+          .desktop-menu, .desktop-dropdown { display: none !important; }
+          .mobile-hamburger { display: block !important; }
         }
+        .desktop-dropdown:hover { display: block !important; }
       `}</style>
     </>
   );
-};
+}
